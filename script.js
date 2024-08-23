@@ -13,12 +13,13 @@ function Gameboard() {
     const getBoard = () => board;
 
     const makeMove = (row, column, player) => {
-        const availableCell = row[column];
-
-        if(!availableCell === 0) return;
-
-        board[row][column].addPlayerMove(player);
+        const availableCell = board[row][column];
+    
+        if (availableCell.getValue() !== 0) return;
+    
+        availableCell.addPlayerMove(player);
     };
+    
 
     const printBoard = () => {
         const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()));
@@ -74,8 +75,31 @@ function GameController(
 
     const playRound = (row, column) => {
         console.log(`${getActivePlayer().name}'s move into row ${row} and column ${column}.`);
-
         board.makeMove(row, column, getActivePlayer().token);
+
+        const gameBoard = board.getBoard();
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                // row win check
+                if (j + 2 < 3 &&
+                    gameBoard[i][j].getValue() !== 0 && 
+                    gameBoard[i][j].getValue() === gameBoard[i][j + 1].getValue() && 
+                    gameBoard[i][j].getValue() === gameBoard[i][j + 2].getValue()) {
+                        const winningPlayer = gameBoard[i][j].getValue() === 1 ? players[0].name : players[1].name;
+                        console.log(`${winningPlayer} is the winner!`);
+                };
+                // column win check
+                if (i + 2 < 3 &&
+                    gameBoard[i][j].getValue() !== 0 && 
+                    gameBoard[i][j].getValue() === gameBoard[i + 1][j].getValue() &&
+                    gameBoard[i][j].getValue() === gameBoard[i + 2][j].getValue()) {
+                        const winningPlayer = gameBoard[i][j].getValue() === 1 ? players[0].name : players[1].name;
+                        console.log(`${winningPlayer} is the winner!`);
+                };
+            };
+        };
+        
 
         switchPlayerTurn();
         printNewRound();
