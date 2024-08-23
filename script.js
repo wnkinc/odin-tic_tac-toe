@@ -97,9 +97,25 @@ function GameController(
                         const winningPlayer = gameBoard[i][j].getValue() === 1 ? players[0].name : players[1].name;
                         console.log(`${winningPlayer} is the winner!`);
                 };
+                // diagonal to the right win check
+                if (j === 0 &&
+                    i === 0 &&
+                    gameBoard[i][j].getValue() === gameBoard[i + 1][j + 1].getValue() &&
+                    gameBoard[i][j].getValue() === gameBoard[i + 2][j + 2].getValue()) {
+                        const winningPlayer = gameBoard[i][j].getValue() === 1 ? players[0].name : players[1].name;
+                        console.log(`${winningPlayer} is the winner!`);
+                };
+                // diagonal to the left win check
+                if (j === 2 &&
+                    i === 0 &&
+                    gameBoard[i][j].getValue() === gameBoard[i + 1][j - 1].getValue() &&
+                    gameBoard[i][j].getValue() === gameBoard[i + 2][j - 2].getValue()) {
+                        const winningPlayer = gameBoard[i][j].getValue() === 1 ? players[0].name : players[1].name;
+                        console.log(`${winningPlayer} is the winner!`);
+                };
             };
         };
-        
+
 
         switchPlayerTurn();
         printNewRound();
