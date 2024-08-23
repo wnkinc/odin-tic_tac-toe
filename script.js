@@ -132,7 +132,8 @@ const GameControllerModule = (() => {
     
         return {
             playRound,
-            getActivePlayer
+            getActivePlayer,
+            getBoard: board.getBoard
         };
     }
 
@@ -141,4 +142,45 @@ const GameControllerModule = (() => {
     };
 })();
 
-const game = GameControllerModule.GameController();
+//********************* UI ****************************
+function ScreenController() {
+    const game = GameControllerModule.GameController();
+    const playerTurnDiv = document.querySelector('.turn');
+    const boardDiv = document.querySelector('.board');
+
+    const updateScreen = () => {
+        boardDiv.textContent = '';
+
+        const board = game.getBoard();
+        const activePlayer = game.getActivePlayer();
+
+        playerTurnDiv.textContent = `${activePlayer.name}'s trun...`
+
+        board.forEach((row, rowIndex) => {
+            row.forEach((cell, columnIndex) => {
+                const cellButton = document.createElement('button');
+                cellButton.classList.add('cell');
+
+                cellButton.dataset.column = columnIndex;
+                cellButton.dataset.row = rowIndex;
+                cellButton.textContent = cell.getValue();
+                boardDiv.appendChild(cellButton);
+            });
+        });
+    };
+
+    function clickHandlerBoard(e) {
+        const selectedColumn = e.target.dataset.column;
+        const selectedRow = e.target.dataset.row;
+
+        if(!selectedColumn || !selectedRow) return;
+
+        game.playRound(selectedRow, selectedColumn);
+        updateScreen();
+    }
+    boardDiv.addEventListener('click', clickHandlerBoard);
+
+    updateScreen();
+}
+
+ScreenController();
